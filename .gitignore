@@ -1,5 +1,6 @@
 .env
 .next/
+.node_modules/
 
 # For Mac
 .DS_Store
