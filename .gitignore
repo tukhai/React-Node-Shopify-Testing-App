@@ -1,2 +1,6 @@
 .env
 .next/
+
+# For Mac
+.DS_Store
+._*
