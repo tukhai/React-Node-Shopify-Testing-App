@@ -10,6 +10,7 @@ const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 class Index extends React.Component {
 	state = { open: false };
 	render() {
+		const emptyState = !store.get('ids');
 		return (
 			<Page>
 				<TitleBar
@@ -27,25 +28,27 @@ class Index extends React.Component {
 					onCancel={() => this.setState({ open: false })}
 				/>
 
-				<Layout>
-					{/* <TextStyle variation="positive">
-						Sample app using React and Next.js
-					</TextStyle> */}
+				{emptyState ? (
+					<Layout>
+						{/* <TextStyle variation="positive">
+							Sample app using React and Next.js
+						</TextStyle> */}
 
-					<EmptyState
-						heading="Discount your products temporarily"
-						action={{
-							content: 'Select products',
-							// onAction: () => console.log('clicked'),
-							onAction: () => this.setState({ open: true }),
-						}}
-						image={img}
-					>
-						<p>Select products to change their price temporarily.</p>
-					</EmptyState>
-				</Layout>
-
-				<ResourceListWithProducts />
+						<EmptyState
+							heading="Select products to start"
+							action={{
+								content: 'Select products',
+								// onAction: () => console.log('clicked'),
+								onAction: () => this.setState({ open: true }),
+							}}
+							image={img}
+						>
+							<p>Select products to change their price temporarily</p>
+						</EmptyState>
+					</Layout>
+				) : (
+					<ResourceListWithProducts />
+				)}
 			</Page>
 		);
 	}
