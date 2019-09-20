@@ -1,6 +1,8 @@
 // import { Layout, Page, TextStyle } from '@shopify/polaris';
 import { EmptyState, Layout, Page } from '@shopify/polaris';
 import { ResourcePicker, TitleBar } from '@shopify/app-bridge-react';
+import store from 'store-js';
+
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 // const Index = () => (
@@ -48,7 +50,9 @@ class Index extends React.Component {
 	handleSelection = (resources) => {
 		const idsFromResources = resources.selection.map((product) => product.id);
 		this.setState({ open: false });
-		console.log("Product selected: ", resources);
+		// console.log("Product selected: ", idsFromResources);
+		// console.log(idsFromResources);
+		store.set('ids', idsFromResources);
 	}
 };
 
