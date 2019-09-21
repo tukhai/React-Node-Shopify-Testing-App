@@ -8,6 +8,8 @@ const session = require('koa-session');
 
 dotenv.config();
 const { default: graphQLProxy } = require('@shopify/koa-shopify-graphql-proxy');
+const Router = require('koa-router');
+const {receiveWebhook, registerWebhook} = require('@shopify/koa-shopify-webhooks');
 const { ApiVersion } = require('@shopify/koa-shopify-graphql-proxy');
 const getSubscriptionUrl = require('./server/getSubscriptionUrl');
 
@@ -16,7 +18,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY } = process.env;
+const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, HOST } = process.env;
 
 
 app.prepare().then(() => {
@@ -33,6 +35,20 @@ app.prepare().then(() => {
 				const { shop, accessToken } = ctx.session;
 				ctx.cookies.set('shopOrigin', shop, { httpOnly: false });
 				// ctx.redirect('/');
+
+				const registration = await registerWebhook({
+					address: `${HOST}/webhooks/products/create`,
+					topic: 'PRODUCTS_CREATE',
+					accessToken,
+					shop,
+				});
+			   
+				if (registration.success) {
+					console.log('Successfully registered webhook!');
+				} else {
+					console.log('Failed to register webhook', registration.result);
+				}
+
 				await getSubscriptionUrl(ctx, accessToken, shop);
 			},
 		}),
